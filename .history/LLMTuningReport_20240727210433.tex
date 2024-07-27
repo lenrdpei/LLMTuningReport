@@ -54,7 +54,6 @@
 \usepackage{multicol}
 \usepackage{longtable}
 \usepackage{tablefootnote}
-\usepackage{float}
 
 
 \title{\zihao{2}\textbf{大数据创新实践实验报告}\\\zihao{3}\textbf{——多模态大模型LLaVA的微调}}
@@ -125,121 +124,12 @@
 \section{基于自动驾驶数据集的模型微调}
 
 % \subsection{LoRA参数微调算法简介}
-% 这段全是GPT写的, 哪个哥们看着改一下吧
-
-% LoRA（Low-Rank Adaptation of Large Language Models）是一种用于微调大型语言模型的算法，旨在减少微调过程中的计算和存储开销。LoRA通过引入低秩矩阵来调整模型的权重，而不是对整个模型进行完全微调。这种方法特别适用于需要在有限资源下进行高效微调的场景。
-
-% \subsubsection{LoRA算法的核心概念}
-
-% \begin{enumerate}
-%   \item \textbf{低秩矩阵分解}：
-%     \begin{itemize}
-%       \item LoRA利用低秩矩阵分解（Low-Rank Decomposition）来表示权重矩阵的变化。具体来说，给定一个权重矩阵$W$，LoRA将其表示为两个低秩矩阵$A$和$B$的乘积，即$W + \Delta W \approx W + A \cdot B$，其中$\Delta W$是权重的调整部分。
-%     \end{itemize}
-%   \item \textbf{参数高效性}：
-%     \begin{itemize}
-%       \item 通过使用低秩矩阵，LoRA显著减少了需要学习的参数数量。这不仅降低了存储需求，还减少了训练和推理的计算开销。
-%     \end{itemize}
-%   \item \textbf{保持原模型的冻结状态}：
-%     \begin{itemize}
-%       \item 在LoRA中，原始模型的权重保持冻结状态，只有低秩矩阵$A$和$B$会在微调过程中进行更新。这使得LoRA在微调过程中能够更好地保持原始模型的特性，同时适应新的任务需求。
-%     \end{itemize}
-% \end{enumerate}
-
-% \subsubsection{LoRA的工作流程}
-
-% \begin{enumerate}
-%   \item \textbf{初始化低秩矩阵}：
-%     \begin{itemize}
-%       \item 在开始微调之前，LoRA初始化两个低秩矩阵$A$和$B$，它们的维度通常远小于原始权重矩阵$W$。
-%     \end{itemize}
-%   \item \textbf{微调过程}：
-%     \begin{itemize}
-%       \item 在微调过程中，仅对低秩矩阵$A$和$B$进行更新，原始权重矩阵$W$保持不变。通过梯度下降法，优化目标函数以最小化模型在新任务上的损失。
-%     \end{itemize}
-%   \item \textbf{预测和推理}：
-%     \begin{itemize}
-%       \item 在推理阶段，将更新后的低秩矩阵与原始权重矩阵结合，生成最终的权重$W' = W + A \cdot B$，用于模型预测。
-%     \end{itemize}
-% \end{enumerate}
-
-% \subsubsection{LoRA的优点}
-
-% \begin{enumerate}
-%   \item \textbf{参数效率}：
-%     \begin{itemize}
-%       \item LoRA通过引入低秩矩阵显著减少了需要更新的参数数量，使得微调过程更为高效。
-%     \end{itemize}
-%   \item \textbf{资源节省}：
-%     \begin{itemize}
-%       \item 由于只需更新较小的低秩矩阵，LoRA在存储和计算资源上的需求较低，非常适合在资源受限的环境中进行微调。
-%     \end{itemize}
-%   \item \textbf{保持原始模型特性}：
-%     \begin{itemize}
-%       \item LoRA在微调过程中冻结了原始模型的权重，这有助于保持原始模型的特性和性能。
-%     \end{itemize}
-% \end{enumerate}
-
-% \subsubsection{LoRA在实践中的应用}
-
-% LoRA已经在多个自然语言处理（NLP）任务中得到了应用，例如文本分类、情感分析和机器翻译。它特别适用于大规模预训练模型的微调，例如BERT、GPT和T5等。
-
-% 通过使用LoRA，开发者可以在保持模型高性能的同时，大幅减少微调所需的计算和存储资源，使得大模型的应用更加广泛和便捷。
 
 \subsection{使用LoRA算法和自动驾驶数据集对LLaVA模型作指令微调}
-我们对llava-v1.5-7b和llava-v1.5-13b两个模型使用了LoRA算法进行微调，两个模型的区别在于规模大小，其中7b模型的参数量为70亿，13b模型的参数量为130亿。
-
-我们使用的数据集是\texttt{bdd1k\_by\_Qiancai}。该数据集由王前才学长提供，衍生自开源的自动驾驶图片数据集\texttt{BDD100k}\cite{yu2020bdd100kdiversedrivingdataset}，从中选取的1000张图片尽可能地覆盖了各种驾驶场景，
-并借助商业多模态模型辅助了生成图像-文本对数据集，经人工检查保证了数据集质量。
-
-我们使用的微调方法是LLaVA官方提供的微调脚本。为使微调效果更佳，我们通过尝试修改了一些训练参数。对上述两个模型分别进行了10个epoch的微调，微调过程中的损失函数变化如图\ref{fig:7b规模模型训练过程中的loss}、\ref{fig:13b规模模型训练过程中的loss}所示。可以看到，随着模型微调轮数的增加，模型的损失函数逐渐下降，表明模型在训练过程中逐渐收敛。
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}{0.49\textwidth}
-    \includegraphics[width=\textwidth]{7b.png}
-    \caption{7b规模模型}
-    \label{fig:7b规模模型训练过程中的loss}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.49\textwidth}
-    \includegraphics[width=\textwidth]{13b.png}
-    \caption{13b规模模型}
-    \label{fig:13b规模模型训练过程中的loss}
-  \end{subfigure}
-  \caption{模型训练过程中的损失函数变化}
-  \label{fig:模型训练过程中的loss}
-\end{figure}
-
 
 \subsection{实现微调模型的图形化界面}
-开源的LLaVA模型提供的交互接口较为原始，每一步调用都需要通过命令行传递模型的路径、训练结果的路径等相关参数，且难以实现连续的对话。
-
-为了方便模型的后续调用与测试，我们对参数微调后的LLaVA模型进行了适当封装，并借助Python的curses库制作了一个朴素的GUI界面进行模型的调用，如图\ref{fig:gui_result}所示。用户可以通过该界面选择使用的模型微调版本、输入图片路径，并与模型进行连续对话，如图\ref{fig:result}所示。
-
-通过GUI界面图\ref{fig:gui}可以清楚地看到，模型在我们给出的示例图片上的回答可以令人满意。
-\begin{figure}[htbp]
-  \centering
-  \begin{subfigure}{0.6\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{gui.png}
-    \caption{GUI界面}
-    \label{fig:gui}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.36\textwidth}
-    \includegraphics[width=\textwidth]{0020.jpg}
-    \caption{示例图片\texttt{0020.jpg}}
-    \label{fig:result}
-  \end{subfigure}
-  \caption{GUI界面运行示例}
-  \label{fig:gui_result}
-\end{figure}
 
 \subsection{结论}
-
-本次实验中，我们使用LoRA算法，利用自动驾驶数据集对LLaVA模型进行了指令微调。我们对两个不同规模的LLaVA模型进行了微调，分别是7b规模和13b规模的模型。通过微调过程中的损失函数变化，我们可以看到模型在训练过程中逐渐收敛，表明模型的微调效果较好。
-
-此外，我们还实现了一个简单的GUI界面，方便用户调用不同微调后的LLaVA模型进行连续对话。通过该界面，用户可以选择使用的模型版本、输入图片路径，并与模型进行连续对话，实现了模型的可视化调用。
 
 \section{探索影响微调效果的实验因素}
 
@@ -253,7 +143,7 @@
 \subsection{数据集介绍}
 CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Large Vision-Language Models）评估基准。这个数据集采用分层数据结构，可以促使LVLMs分析复杂的驾驶场景，并生成高质量的预注释供人工注释者进一步验证和修订。CODA-LM旨在提供一个自动化和量化的评估方法，用于解决自动驾驶系统在处理真实世界的边缘情况时常见的挑战。
 
-如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集 \cite{chen2024automatedevaluationlargevisionlanguage}。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们详细介绍一下这三个任务：
+如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们详细介绍一下这三个任务：
 
 \begin{enumerate}
   \item \textbf{一般感知 (General Perception):}
@@ -401,16 +291,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 
 \subsection{评估结果}
 通过以上流程，我们得到了LLaVA1.5-7B与LLaVA1.5-13B微调后的模型在CODA-LM数据集上的评估结果。下表\ref{CODA-LM result}
-为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在mini集上实验得到的。
 
-对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
-
-区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
-在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
-
-在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
-
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
   \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
@@ -432,7 +313,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \end{tabular}
 \end{table}
 
-
+\subsection{结论}
 
 \section{实验结论}
 
@@ -458,3 +339,4 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 \addcontentsline{toc}{section}{附录：实验日志与心得}
 
 \end{document}
+
