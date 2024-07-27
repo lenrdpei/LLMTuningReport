@@ -143,7 +143,7 @@
 \subsection{数据集介绍}
 CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Large Vision-Language Models）评估基准。这个数据集采用分层数据结构，可以促使LVLMs分析复杂的驾驶场景，并生成高质量的预注释供人工注释者进一步验证和修订。CODA-LM旨在提供一个自动化和量化的评估方法，用于解决自动驾驶系统在处理真实世界的边缘情况时常见的挑战。
 
-如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集 \cite{chen2024automatedevaluationlargevisionlanguage}。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们详细介绍一下这三个任务：
+如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们详细介绍一下这三个任务：
 
 \begin{enumerate}
   \item \textbf{一般感知 (General Perception):}
@@ -234,7 +234,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \item \textbf{运行转换脚本}
         使用 Python 脚本 \texttt{convert2vqa.py} 转换注释数据。根据需要处理的语言版本，可以选择运行英文或中文版本的命令，这里我们选择英文。
 
-  \item \textbf{基本VQA格式：}
+  \item \textbf{基本 VQA 格式：}
         VQA 格式的数据采用简单的字典形式保存，包含 \texttt{question\_id}、\texttt{image}、\texttt{question} 和 \texttt{answer}。这种格式便于处理和解析数据，用于视觉问答模型的训练和评估。
 
 
@@ -249,62 +249,16 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 \end{enumerate}
 
 \subsubsection{数据评估}
-由于最终评估需要用的openai的gpt4o的api,价格较为昂贵，为了控制成本，我们选择使用CODA-LM的Mini数据集（官方给出的测试集的子集）对LLaVA1.5-7B与LLaVA1.5-13B微调后的模型进行评估。以下是流程概要：
+由于最终评估需要用的openai的gpt4o的api,价格较为昂贵，因此我们使用CODA-LM的Mini数据集（官方给出的测试集的子集）对LLaVA1.5-7B与LLaVA1.5-13B微调后的模型进行评估。以下是流程概要：
 
-\begin{enumerate}
-  \item \textbf{推理与保存结果：}
-        按照 CODA-LM 的提交指南，我们分别使用LLaVA1.5-7B与LLaVA1.5-13B微调后的模型对以上转换后的数据执行推理，并按照要求保存结果，推理后的部分结果如图\ref{fig:tuili}所示：
-        \begin{figure}[h] % 创建一个图像环境
-          \centering % 图片居中
-          \includegraphics[width=1\textwidth]{tuili.jpg} % 插入图片，设置图片宽度为文本宽度的50%
-          \caption{推理部分结果示例} % 图片标题
-          \label{fig:tuili} % 图片标签，用于引用
-        \end{figure}
 
-  \item \textbf{单独评估每个任务：}
-        使用特定的脚本和 OpenAI 的 gpt-4o-2024-05-13 模型进行评估，为每个任务生成评估结果：
-        \begin{itemize}
-          \item 一般感知：
-                \begin{verbatim}
-    python stage1_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/general_perception_answer.jsonl
-      --save_path eval/general_perception_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 驾驶建议：
-                \begin{verbatim}
-    python stage2_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/driving_suggestion_answer.jsonl
-      --save_path eval/driving_suggestion_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 区域感知：
-                \begin{verbatim}
-    python stage3_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/region_perception_answer_w_label.jsonl
-      --save_path eval/region_perception_answer_w_label --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-        \end{itemize}
-\end{enumerate}
 
 
 \subsection{评估结果}
-通过以上流程，我们得到了LLaVA1.5-7B与LLaVA1.5-13B微调后的模型在CODA-LM数据集上的评估结果。下表\ref{CODA-LM result}
-为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在mini集上实验得到的。
 
-对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
-
-区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
-在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
-
-在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
-
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
   \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
-  \label{CODA-LM result}
   \small % 调整表格字体大小
   % \renewcommand{\arraystretch}{1.2} % 调整行距
   \begin{tabular}{lcccccccccc}
@@ -322,7 +276,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \end{tabular}
 \end{table}
 
-
+\subsection{结论}
 
 \section{实验结论}
 

@@ -139,22 +139,17 @@
 
 \subsection{结论}
 
-\section{使用CODA-LM数据集进行评估}
-\subsection{数据集介绍}
+\section{微调结果的分析与评估}
+
+\subsection{使用维基百科数据集进行主观初步评估}
+
+\subsection{计算微调模型的相关评价指标}
+
+\subsection{使用CODA-LM数据集进行评估}
+\subsubsection{数据集介绍}
 CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Large Vision-Language Models）评估基准。这个数据集采用分层数据结构，可以促使LVLMs分析复杂的驾驶场景，并生成高质量的预注释供人工注释者进一步验证和修订。CODA-LM旨在提供一个自动化和量化的评估方法，用于解决自动驾驶系统在处理真实世界的边缘情况时常见的挑战。
 
-如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集 \cite{chen2024automatedevaluationlargevisionlanguage}。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们详细介绍一下这三个任务：
-
-\begin{enumerate}
-  \item \textbf{一般感知 (General Perception):}
-        这个任务的基础在于全面理解驾驶场景中关键的道路实体，包括它们的外观、位置，以及它们如何影响自我车辆的驾驶行为。这个任务对于评估大型视觉语言模型（LVLMs）在解释复杂交互场景中的熟练程度至关重要，仿佛在镜像自动驾驶中的感知过程。此外，为了全面评估LVLMs在不同环境下的表现，数据集根据时间和天气条件对图像进行分类，包括夜间和白天场景，以及晴朗、多云和雨天的天气条件。
-
-  \item \textbf{区域感知 (Regional Perception):}
-        这个任务衡量LVLMs在提供特定边界框时理解边缘案例对象的能力，涉及描述给定边界框内的对象以及解释它们为何会影响自动驾驶行为。建立区域感知基于一个核心认识——精确定位边缘案例对于提高系统在自动驾驶实际应用中的整体稳健性至关重要。这些情景通常包含复杂或不寻常的元素，传统模型可能会忽视或难以正确解释，例如独特的交通标志、行为异常的行人和非典型的道路条件。通过专注于这些案例，可以全面了解模型理解边缘案例对象的能力。
-
-  \item \textbf{驾驶建议 (Driving Suggestions):}
-        这个任务旨在评估LVLMs制定驾驶建议的能力，这是可解释自动驾驶的一个关键组成部分。这个任务与自动驾驶的规划过程密切相关，要求模型在正确感知当前驾驶环境的一般和区域方面后，为自我车辆提供最佳的驾驶建议。通过构建驾驶建议任务，可以深入评估LVLMs在制定有效驾驶策略方面的表现。
-\end{enumerate}
+如表\ref{CODA-LM dataset}中所示，CODA-LM 是首个采用分层评估框架的大规模多模式自动驾驶道路拐角案例数据集。其中包含了三种任务:一般感知、区域感知和驾驶建议。为了更好地理解CODA-LM数据集的评估指标，我们
 
 \begin{table}[h]
   \centering
@@ -182,129 +177,12 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 
 此外，CODA-LM 数据集通过结构化的文本和人工检查的过程，确保了注释的质量和一致性，从而提高了自动驾驶系统的解释能力和决策质量。这种系统的构建可以显著推动自动驾驶技术的发展，特别是在解决复杂和非标准驾驶场景时的应用。
 
-\subsection{实验过程}
+\subsubsection{实验设计}
+\subsubsection{评估结果}
 
-\subsubsection{数据准备}
-首先，我们需要下载和准备CODA-LM 数据集。以下是主要步骤概要：
-
-\begin{enumerate}
-  \item \textbf{数据下载：}
-        \begin{itemize}
-          \item 按照 CODA 官方指南下载图像文件。
-          \item 下载 CODA-LM 的注释文件，并在同一根目录下解压。
-        \end{itemize}
-
-  \item \textbf{数据划分：} 数据集被划分为训练集、验证集、测试集和小型集，具体信息如下：
-        \begin{itemize}
-          \item Train集：包含 4884 张图像，来源于 CODA2022 的验证集。
-          \item Val集：包含 4384 张图像，来源于 CODA2022 的测试集。
-          \item Test集：包含 500 张图像，同样来源于 CODA2022 的测试集。
-          \item Mini集：50 张图像，为验证集的一个子集，用于演示。
-        \end{itemize}
-  \item \textbf{数据组织：} 按照要求组织数据，确保图像和注释文件的对应关系正确。
-  \item \textbf{数据格式：}
-        注释文件包含三个任务的问答对，数据格式如下：
-        \begin{verbatim}
-    {
-        "general_perception": {
-            "vehicles": [...],
-            "vulnerable_road_users": [...],
-            "traffic signs": [...],
-            "traffic lights": [...],
-            "traffic cones": [...],
-            "barriers": [...],
-            "other objects": [...],
-            "description and explanation": <str>
-        },
-        "region_perception": {
-            "1": {...},
-            "2": {...},
-            "3": {...}
-        },
-        "driving_suggestion": <str>
-    }
-    \end{verbatim}
-\end{enumerate}
-
-\subsubsection{数据转换}
-
-在下载好数据后，我们将 CODA-LM 数据集转换为基本视觉问答（VQA）格式。以下是流程概要：
-
-\begin{enumerate}
-  \item \textbf{运行转换脚本}
-        使用 Python 脚本 \texttt{convert2vqa.py} 转换注释数据。根据需要处理的语言版本，可以选择运行英文或中文版本的命令，这里我们选择英文。
-
-  \item \textbf{基本VQA格式：}
-        VQA 格式的数据采用简单的字典形式保存，包含 \texttt{question\_id}、\texttt{image}、\texttt{question} 和 \texttt{answer}。这种格式便于处理和解析数据，用于视觉问答模型的训练和评估。
-
-
-  \item \textbf{区域感知的具体实现：}如图\ref{fig:example}中所示，对于区域感知，文中提到了一个简单的实现方法：在图像上绘制红色矩形框，保存在 \texttt{images\_w\_bboxes} 目录中。这种方法可以帮助模型学习如何从特定区域中提取信息。
-
-        \begin{figure}[h] % 创建一个图像环境
-          \centering % 图片居中
-          \includegraphics[width=0.8\textwidth]{visual.png} % 插入图片，设置图片宽度为文本宽度的50%
-          \caption{区域感知图片示例} % 图片标题
-          \label{fig:example} % 图片标签，用于引用
-        \end{figure}
-\end{enumerate}
-
-\subsubsection{数据评估}
-由于最终评估需要用的openai的gpt4o的api,价格较为昂贵，为了控制成本，我们选择使用CODA-LM的Mini数据集（官方给出的测试集的子集）对LLaVA1.5-7B与LLaVA1.5-13B微调后的模型进行评估。以下是流程概要：
-
-\begin{enumerate}
-  \item \textbf{推理与保存结果：}
-        按照 CODA-LM 的提交指南，我们分别使用LLaVA1.5-7B与LLaVA1.5-13B微调后的模型对以上转换后的数据执行推理，并按照要求保存结果，推理后的部分结果如图\ref{fig:tuili}所示：
-        \begin{figure}[h] % 创建一个图像环境
-          \centering % 图片居中
-          \includegraphics[width=1\textwidth]{tuili.jpg} % 插入图片，设置图片宽度为文本宽度的50%
-          \caption{推理部分结果示例} % 图片标题
-          \label{fig:tuili} % 图片标签，用于引用
-        \end{figure}
-
-  \item \textbf{单独评估每个任务：}
-        使用特定的脚本和 OpenAI 的 gpt-4o-2024-05-13 模型进行评估，为每个任务生成评估结果：
-        \begin{itemize}
-          \item 一般感知：
-                \begin{verbatim}
-    python stage1_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/general_perception_answer.jsonl
-      --save_path eval/general_perception_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 驾驶建议：
-                \begin{verbatim}
-    python stage2_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/driving_suggestion_answer.jsonl
-      --save_path eval/driving_suggestion_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 区域感知：
-                \begin{verbatim}
-    python stage3_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/region_perception_answer_w_label.jsonl
-      --save_path eval/region_perception_answer_w_label --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-        \end{itemize}
-\end{enumerate}
-
-
-\subsection{评估结果}
-通过以上流程，我们得到了LLaVA1.5-7B与LLaVA1.5-13B微调后的模型在CODA-LM数据集上的评估结果。下表\ref{CODA-LM result}
-为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在mini集上实验得到的。
-
-对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
-
-区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
-在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
-
-在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
-
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
   \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
-  \label{CODA-LM result}
   \small % 调整表格字体大小
   % \renewcommand{\arraystretch}{1.2} % 调整行距
   \begin{tabular}{lcccccccccc}
@@ -322,7 +200,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \end{tabular}
 \end{table}
 
-
+\subsection{结论}
 
 \section{实验结论}
 

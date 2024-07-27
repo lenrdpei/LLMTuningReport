@@ -298,9 +298,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
 在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
 
-在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
 
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
   \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
@@ -322,7 +320,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \end{tabular}
 \end{table}
 
-
+\subsection{结论}
 
 \section{实验结论}
 
