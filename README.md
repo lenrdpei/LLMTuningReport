@@ -5,3 +5,6 @@
 3. 工作完成后，新建一个pull request将更改合并到main branch。
 
 ![branch illustration](https://docs.github.com/assets/cb-23923/mw-1440/images/help/repository/branching.webp)
+
+## 不会用Git？
+下载tex文件，本地编辑后发给我手动合并即可。
