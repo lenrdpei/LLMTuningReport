@@ -151,29 +151,27 @@
 \begin{table}[htbp]
   \centering
   \caption{Comparison of Different Methods}
-  \small % 调整表格字体大小
-  % \renewcommand{\arraystretch}{1.2} % 调整行距
-  \begin{tabular}{lcccccccccc}
-    \toprule
-    \textbf{Method}   & \textbf{General↑}   & \multicolumn{6}{c}{\textbf{Regional Perception↑}} & \textbf{Suggestion↑}                                                                            \\
-    \cmidrule(r){3-8}
-                      & \textbf{Text-Score} & \textbf{Vehicle}                                  & \textbf{VRU}         & \textbf{Cone}  & \textbf{Barrier} & \textbf{Other} & \textbf{Text-Score} \\
-    \midrule
-    MiniGPT-v2-7B     & 11.58               & 18.74                                             & 13.58                & 15.34          & 13.02            & 14.41          & 10.00               \\
-    Shikra-7B         & 12.24               & 28.29                                             & 17.88                & 21.23          & 20.00            & 19.67          & 10.20               \\
-    LLaVA1.5-7B       & 19.30               & 46.67                                             & 38.47                & 50.83          & 30.93            & 33.82          & 23.16               \\
-    Qwen-VL-Chat-7B   & 18.22               & 35.48                                             & 24.16                & 19.61          & 17.56            & 25.86          & 22.06               \\
-    MiniCPM-V-2.5-8B  & 41.12               & 61.91                                             & 54.82                & 66.57          & 35.35            & 58.75          & 48.48               \\
-    \midrule
-    LLaVA1.5-13B      & 24.54               & 53.62                                             & 36.79                & 41.27          & 30.41            & 33.82          & 27.90               \\
-    LLaVA-NeXT-13B    & 29.86               & 55.51                                             & 47.08                & 70.34          & 40.47            & 46.45          & 31.92               \\
-    InternVL-V1-5-20B & 38.38               & 63.77                                             & 53.14                & 80.34          & 46.86            & 57.11          & 41.18               \\
-    \midrule
-    Gemini-Pro        & 25.24               & 49.03                                             & 42.77                & 69.56          & 45.70            & 51.32          & 27.40               \\
-    GPT-4V            & \textbf{57.50}      & 60.89                                             & 40.58                & 66.08          & 50.17            & 53.16          & \textbf{63.30}      \\
-    \midrule
-    CODA-VLM (ours)   & \textbf{55.04}      & \textbf{78.79}                                    & \textbf{73.80}       & \textbf{86.18} & \textbf{78.72}   & \textbf{68.75} & \textbf{58.14}      \\
-    \bottomrule
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    \textbf{Method}   & \textbf{General↑}   & \multicolumn{8}{c|}{\textbf{Regional Perception↑}} & \textbf{Suggestion↑}                                                                                                                               \\
+    \cline{3-10}
+                      & \textbf{Text-Score} & \textbf{ALL}                                       & \textbf{Vehicle}     & \textbf{VRU}   & \textbf{Sign}  & \textbf{Light} & \textbf{Cone}  & \textbf{Barrier} & \textbf{Other} & \textbf{Text-Score} \\
+    \hline
+    MiniGPT-v2-7B     & 11.58               & 15.93                                              & 18.74                & 13.58          & 15.71          & 17.78          & 15.34          & 13.02            & 14.41          & 10.00               \\
+    Shikra-7B         & 12.24               & 22.94                                              & 28.29                & 17.88          & 20.00          & 15.56          & 21.23          & 20.00            & 19.67          & 10.20               \\
+    LLaVA1.5-7B       & 19.30               & 42.06                                              & 46.67                & 38.47          & 39.14          & 48.89          & 50.83          & 30.93            & 33.82          & 23.16               \\
+    Qwen-VL-Chat-7B   & 18.22               & 26.62                                              & 35.48                & 24.16          & 20.86          & 23.33          & 19.61          & 17.56            & 25.86          & 22.06               \\
+    MiniCPM-V-2.5-8B  & 41.12               & 57.20                                              & 61.91                & 54.82          & 59.43          & 46.67          & 66.57          & 35.35            & 58.75          & 48.48               \\
+    \hline
+    LLaVA1.5-13B      & 24.54               & 42.41                                              & 53.62                & 36.79          & 33.71          & 46.67          & 41.27          & 30.41            & 33.82          & 27.90               \\
+    LLaVA-NeXT-13B    & 29.86               & 53.63                                              & 55.51                & 47.08          & 54.00          & 60.00          & 70.34          & 40.47            & 46.45          & 31.92               \\
+    InternVL-V1-5-20B & 38.38               & 61.53                                              & 63.77                & 53.14          & 50.57          & 57.78          & 80.34          & 46.86            & 57.11          & 41.18               \\
+    \hline
+    Gemini-Pro        & 25.24               & 51.38                                              & 49.03                & 42.77          & 37.43          & 42.22          & 69.56          & 45.70            & 51.32          & 27.40               \\
+    GPT-4V            & \textbf{57.50}      & 56.26                                              & 60.89                & 40.58          & 49.43          & 54.44          & 66.08          & 50.17            & 53.16          & \textbf{63.30}      \\
+    \hline
+    CODA-VLM (ours)   & \textbf{55.04}      & \textbf{77.68}                                     & \textbf{78.79}       & \textbf{73.80} & \textbf{64.86} & \textbf{73.33} & \textbf{86.18} & \textbf{78.72}   & \textbf{68.75} & \textbf{58.14}      \\
+    \hline
   \end{tabular}
 \end{table}
 
