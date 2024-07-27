@@ -255,12 +255,12 @@
 \centering
 \caption{训练周期对微调效果的影响}%标题
 \begin{tabular}{ccccccc}
-\Xhline{2pt}
+\toprule
 问题 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
-\Xhline{1pt}
-13b_0epoch & 回答宽泛 & 机器人 & 回答宽泛 & 回答宽泛 & 5 & 无 \\
-13b_10epoch & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
-\Xhline{2pt}
+\midrule
+$13b_0epoch$ & 回答宽泛 & 机器人 & 回答宽泛 & 回答宽泛 & 5 & 无 \\
+$13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
+\bottomrule
 \end{tabular}
 \label{effect_epoch}
 \end{table}
@@ -271,12 +271,12 @@
 \centering
 \caption{模型大小对微调效果的影响}%标题
 \begin{tabular}{ccccccc}
-\Xhline{2pt}
+\toprule
 问题 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
-\Xhline{1pt}
-7b_10epoch & 强调道路 & textbf{驾驶者} & 回答精确(No,...) & textbf{回答宽泛} & 6 & 无 \\
-13b_10epoch & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
-\Xhline{2pt}
+\midrule
+$7b_10epoch$ & 强调道路 & textbf{驾驶者} & 回答精确(No,...) & textbf{回答宽泛} & 6 & 无 \\
+$13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
+\bottomrule
 \end{tabular}
 \label{effect_size}
 \end{table}
