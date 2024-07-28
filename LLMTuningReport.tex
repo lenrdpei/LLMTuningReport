@@ -242,7 +242,7 @@
 
 \begin{figure}[ht] 
     \centering 
-    \includegraphics[width=0.75\textwidth]{fig/\detokenize{R.jpg}}
+    \includegraphics[width=0.75\textwidth]{R.jpg}
     \caption{提问用图} 
     \label{R.jpg} % 图片标签，用于交叉引用
 \end{figure}
@@ -262,20 +262,21 @@
 
 \begin{figure}[ht] 
     \centering 
-    \includegraphics[width=0.75\textwidth]{fig/\detokenize{13b_0-.jpg}}
+    \includegraphics[width=0.75\textwidth]{chat/13b_0-.jpg}
     \caption{13b预训练模型的部分回答} 
     \label{13b_0} % 图片标签，用于交叉引用
 \end{figure}
 
 \begin{table}[ht]
+\small
 \centering
 \caption{训练周期对微调效果的影响}%标题
 \begin{tabular}{ccccccc}
 \toprule
 问题 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
 \midrule
-$13b_0epoch$ & 回答宽泛 & 机器人 & 回答宽泛 & 回答宽泛 & 5 & 无 \\
-$13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
+13b-0epoch & 回答宽泛 & 机器人 & 回答宽泛 & 回答宽泛 & 5 & 无 \\
+13b-10epoch & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
 \bottomrule
 \end{tabular}
 \label{effect_epoch}
@@ -283,11 +284,11 @@ $13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Y
 
 \subsection{探究模型大小对微调效果的影响}
 
-以7b的10epoch模型为例，对于部分问题的回答如图\ref{7b_10}所示：
+以7b的10-epoch模型为例，对于部分问题的回答如图\ref{7b_10}所示：
 
 \begin{figure}[ht] 
     \centering 
-    \includegraphics[width=0.75\textwidth]{fig/\detokenize{7b_10.jpg}}
+    \includegraphics[width=0.75\textwidth]{chat/7b_10.jpg}
     \caption{7b10epoch模型的部分回答} 
     \label{7b_10} % 图片标签，用于交叉引用
 \end{figure}
@@ -295,6 +296,7 @@ $13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Y
 \begin{table}[ht]
 \centering
 \caption{模型大小对微调效果的影响}%标题
+\small
 \begin{tabular}{ccccccc}
 \toprule
 问题 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
