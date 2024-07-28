@@ -82,16 +82,13 @@
     \zihao{-4}
     \vspace{0.8cm}
     \linespread{1.25}
-    本论文主要研究了空气质量、污染物水平及其与时空、气候因素的关系，并基于历史数据预测未来空气质量。论文首先对数据进行了预处理，包括数据描述、数据标准化、异常值及缺失值处理、极值值处理等步骤。接着，采用系统聚类方法对不同城市的污染物水平进行了潜在模式探索，通过均值和不同邻距离的聚类方法分析得出了系统聚类结果，并用因子分析的得分对其进行了解释。
-
-    论文进一步探讨了空气质量与时空、气候因素的相关关系，应用多元线性回归模型和改进的多元线性回归模型，诊断模型结果并分析了气候因素与空气质量之间的相关性。此外，论文介绍并应用了广义线性模型，实现利用时空、气候因素对空气质量进行更加准确的预测。
-
-    最后，论文利用SARIMA模型和GARCH模型，根据历史空气质量数据预测未来一段时间内的空气质量，以南昌市为例进行了实证研究。通过数据导入、探索性期性、参数确定、模型诊断及预测等步骤，详细展示了两种模型的应用过程和预测效果。
-
-    本文不仅揭示了不同城市空气污染物可能存在的潜在模式，同时探究了空气质量与多种因素之间的复杂关系，也为空气质量的预测提供了有效的模型和方法，对城市环境管理、污染控制和空气质量的预报具有重要的参考价值。
+    %报告摘要
+    本次实验旨在通过自动驾驶数据集对多模态大模型LLaVA进行指令微调，以提升模型在自动驾驶领域的综合表现。
+    
+    我们使用LoRA算法对LLaVA模型进行微调，通过调整训练周期和模型规模，探究微调效果的影响因素。在此基础上，我们设计了一个简单的GUI界面，方便用户调用微调后的模型进行连续对话。通过人工对话和VizWiz数据集的评估，我们初步评估了微调效果，并探究了微调过程中的关键影响因素。最后，我们使用CODA-LM数据集评估了微调模型在自动驾驶领域的性能，为模型选择和微调提供参考。
 
     \vspace{1cm}
-    \noindent\textbf{关键词：} 系统聚类\hspace{0.22cm} 因子分析\hspace{0.22cm} 多元线性回归\hspace{0.22cm} 广义线性模型\hspace{0.22cm} 时间序列分析
+    \noindent\textbf{关键词：} 多模态大模型\hspace{0.22cm} 指令微调\hspace{0.22cm} 大模型评估\hspace{0.22cm} GUI设计
   \end{abstract}
 \end{titlepage}
 
@@ -507,23 +504,15 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 通过以上流程，我们得到了LLaVA1.5-7B与LLaVA1.5-13B微调后的模型在CODA-LM数据集上的评估结果。下表\ref{CODA-LM result}
 为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在CODA-LM的Mini集上实验得到的。
 
-对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
-
-区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
-在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
-
-在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
-
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。值得指出的是，虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
-  \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
+  \caption{不同LLaVA模型微调前后在CODA-LM数据集上的评估结果对比}
   \label{CODA-LM result}
   \small % 调整表格字体大小
   % \renewcommand{\arraystretch}{1.2} % 调整行距
   \begin{tabular}{lcccccccccc}
     \toprule
-    \textbf{Method}   & \textbf{General↑}   & \multicolumn{5}{c}{\textbf{Regional Perception↑}} & \textbf{Suggestion↑}                                                                           \\
+    \textbf{Method}   & \textbf{General}   & \multicolumn{5}{c}{\textbf{Regional Perception}} & \textbf{Suggestion}                                                                           \\
     \cmidrule(r){3-7}
                       & \textbf{Text-Score} & \textbf{Vehicle}                                  & \textbf{VRU}         & \textbf{Cone} & \textbf{Barrier} & \textbf{Other} & \textbf{Text-Score} \\
     \midrule
@@ -536,30 +525,38 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \end{tabular}
 \end{table}
 
+对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
+
+区域感知评分分为五个类别：Vehicle（车辆）、VRU（易受伤害路面使用者）、Cone（交通锥）、Barrier（障碍物）、和 Other（其他）。
+在 7B 模型中，除了 Vehicle 和 VRU 分数略有下降外，其他三个类别在加上 LoRA 后都有所提升，尤其是 Barrier 和 Other 类别的得分显著增加。在 13B 模型中，加上 LoRA 后 Vehicle 和 VRU 的得分略有下降，但 Barrier 的得分从 30.41 提升至 40.00，显示出较大的增幅。
+
+在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
+
+总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。值得指出的是，虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
+
+
 
 
 \section{实验结论}
+% 实验报告的结论，总结每一个section
+本次实验中，我们使用了LoRA算法对多模态大模型LLaVA进行了自动驾驶领域的指令微调，并设计了一个简单的用户图形界面，方便用户调用不同微调后的模型进行连续对话，并对不同的模型展开评估。
+
+通过对LLaVA1.5-7B和LLaVA1.5-13B模型的人工对话，我们发现适当增加训练 epoch，模型的回答更加简练准确，而非预训练模型中十分宽泛的回答。而这正是自动驾驶模型所需要的判断能力。此外，我们还使用VizWiz数据集评估了微调模型在VQA任务上的通用性能，发现微调后的模型在VizWiz数据集上的表现不如未微调的baseline模型，这可能是由于微调指令为自动驾驶方面的数据集，对于其他领域的通用性能可能带来负面效果。最后，我们使用CODA-LM数据集评估了微调模型在自动驾驶领域的性能，发现LoRA算法能够显著提高LLaVA模型在所有设计的自动驾驶任务上的性能，特别是在文本得分和障碍物识别方面。
+
+总的来说，本次实验为我们提供了一个全面的视觉语言模型的微调实践，通过对比不同模型和微调方法的表现，我们可以更好地理解指令微调对模型通用性能的影响，为模型选择和微调提供参考。
+
+
 
 \appendix
+
 \newpage
 \section*{参考文献}
 \addcontentsline{toc}{section}{参考文献}
 \printbibliography[heading=none]
-% \noindent
-% [1] 乐东明,王文浚,王颖,等. 2020—2022年咸宁市臭氧污染气象特征及成因分析[J].黑龙江环境通报, 2024, 37(05):30-32.
-
-% \noindent
-% [2] 李高荣,吴密霞. 多元统计分析[M]. 北京：科学出版社, 2021
-
-% \noindent
-% [3] John A. Rice. Mathematical Statistics and Data Analysis[M]. Boston: Cengage Learning, 2006
-
-% \noindent
-% [4] 何书元. 应用时间序列分析[M]. 北京：北京大学出版社, 2003
 
 \newpage
 \section*{附录：小组分工与实验日志}
-% \addcontentsline{toc}{section}{附录：实验日志与心得}
+\addcontentsline{toc}{section}{附录：小组分工与实验日志}
 
 \begin{enumerate}
   \item \textbf{王子霖 \space 组长}
@@ -570,7 +567,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
           \item 辅助撰写实验报告和实验日志
         \end{itemize}
 
-  \item \textbf{彭柯}
+  \item \textbf{彭珂}
         \begin{itemize}
           \item 完成LLaVA1.5-7b模型的微调
           \item 实现在gui上的模型推理对话
@@ -604,10 +601,10 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
   \item \textbf{文宇祥}
         \begin{itemize}
           \item 辅助整理实验报告和实验日志
-          \item 辅助对模型基础能力的评估，设计问题
+          \item 辅助对模型基础能力的评估
         \end{itemize}
-
 \end{enumerate}
+
 \textbf{注：}由于需要调用OpenAI的API，总计为50元，由大家平摊，因此每位小组成员均提供资金支持。
 
 \includepdf[pages=-]{log/daily.pdf}
