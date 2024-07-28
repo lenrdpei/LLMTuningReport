@@ -281,7 +281,7 @@
 模型 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
 \midrule
 13b-0epoch & 回答宽泛 & 机器人 & 回答宽泛 & 回答宽泛 & 5 & 无 \\
-13b-10epoch & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
+13b-10epoch & \textbf{强调道路} & 机器人 & \textbf{回答精确(No,...)} & \textbf{回答精确(Yes,...)} & \textbf{6} & 无 \\
 \bottomrule
 \end{tabular}
 \label{effect_epoch}
@@ -302,8 +302,8 @@
 \toprule
 模型 & 描述图片 & 询问身份 & 能否加速 & 能否变道 & 汽车数量 & 是否有公交 \\
 \midrule
-7b-10epoch & 强调道路 & textbf{驾驶者} & 回答精确(No,...) & textbf{回答宽泛} & 6 & 无 \\
-13b-10epoch & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Yes,...) & 6 & 无 \\
+7b-10epoch & 强调道路 & 驾驶者 & 回答精确(No,...) & 回答宽泛 & 6 & 无 \\
+13b-10epoch & 强调道路 & \textbf{机器人} & 回答精确(No,...) & \textbf{回答精确(Yes,...)} & 6 & 无 \\
 \bottomrule
 \end{tabular}
 \label{effect_size}
