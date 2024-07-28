@@ -17,7 +17,7 @@
 
 \usepackage{listings}
 \usepackage{color}
-\usepackage{pdfpages}
+
 \usepackage[sorting=none]{biblatex}
 \addbibresource{LLMTuningReport.bib}
 
@@ -187,28 +187,28 @@
 % 通过使用LoRA，开发者可以在保持模型高性能的同时，大幅减少微调所需的计算和存储资源，使得大模型的应用更加广泛和便捷。
 
 \subsection{使用LoRA算法和自动驾驶数据集对LLaVA模型作指令微调}
-% 我们对llava-v1.5-7b和llava-v1.5-13b两个模型使用了LoRA算法进行微调，两个模型的区别在于规模大小，其中7b模型的参数量为70亿，13b模型的参数量为130亿。
+我们对llava-v1.5-7b和llava-v1.5-13b两个模型使用了LoRA算法进行微调，两个模型的区别在于规模大小，其中7b模型的参数量为70亿，13b模型的参数量为130亿。
 
-% 我们使用的数据集是\texttt{bdd1k\_by\_Qiancai}。该数据集由王前才学长提供，衍生自开源的自动驾驶图片数据集\texttt{BDD100k}\cite{yu2020bdd100kdiversedrivingdataset}，从中选取的1000张图片尽可能地覆盖了各种驾驶场景，
-% 并借助商业多模态模型辅助了生成图像-文本对数据集，经人工检查保证了数据集质量。
+我们使用的数据集是\texttt{bdd1k\_by\_Qiancai}。该数据集由王前才学长提供，衍生自开源的自动驾驶图片数据集\texttt{BDD100k}\cite{yu2020bdd100kdiversedrivingdataset}，从中选取的1000张图片尽可能地覆盖了各种驾驶场景，
+并借助商业多模态模型辅助了生成图像-文本对数据集，经人工检查保证了数据集质量。
 
-% 我们使用的微调方法是LLaVA官方提供的微调脚本。为使微调效果更佳，我们通过尝试修改了一些训练参数。对上述两个模型分别进行了10个epoch的微调，微调过程中的损失函数变化如图\ref{fig:7b规模模型训练过程中的loss}、\ref{fig:13b规模模型训练过程中的loss}所示。可以看到，随着模型微调轮数的增加，模型的损失函数逐渐下降，表明模型在训练过程中逐渐收敛。
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}{0.49\textwidth}
-%     \includegraphics[width=\textwidth]{7b.png}
-%     \caption{7b规模模型}
-%     \label{fig:7b规模模型训练过程中的loss}
-%   \end{subfigure}
-%   \hfill
-%   \begin{subfigure}{0.49\textwidth}
-%     \includegraphics[width=\textwidth]{13b.png}
-%     \caption{13b规模模型}
-%     \label{fig:13b规模模型训练过程中的loss}
-%   \end{subfigure}
-%   \caption{模型训练过程中的损失函数变化}
-%   \label{fig:模型训练过程中的loss}
-% \end{figure}
+我们使用的微调方法是LLaVA官方提供的微调脚本。为使微调效果更佳，我们通过尝试修改了一些训练参数。对上述两个模型分别进行了10个epoch的微调，微调过程中的损失函数变化如图\ref{fig:7b规模模型训练过程中的loss}、\ref{fig:13b规模模型训练过程中的loss}所示。可以看到，随着模型微调轮数的增加，模型的损失函数逐渐下降，表明模型在训练过程中逐渐收敛。
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{7b.png}
+    \caption{7b规模模型}
+    \label{fig:7b规模模型训练过程中的loss}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{13b.png}
+    \caption{13b规模模型}
+    \label{fig:13b规模模型训练过程中的loss}
+  \end{subfigure}
+  \caption{模型训练过程中的损失函数变化}
+  \label{fig:模型训练过程中的loss}
+\end{figure}
 
 
 \subsection{实现微调模型的图形化界面}
@@ -488,58 +488,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 % [4] 何书元. 应用时间序列分析[M]. 北京：北京大学出版社, 2003
 
 \newpage
-\section*{附录：小组分工与实验日志}
-% \addcontentsline{toc}{section}{附录：实验日志与心得}
-
-\begin{enumerate}
-  \item \textbf{王子霖 \space 组长}
-        \begin{itemize}
-          \item 整体项目协调
-          \item 完成LLaVA1.5-13b模型的微调
-          \item 在CODA-LM数据集上对两个模型进行评估
-          \item 辅助撰写实验报告和实验日志
-        \end{itemize}
-
-  \item \textbf{彭柯}
-        \begin{itemize}
-          \item 完成LLaVA1.5-7b模型的微调
-          \item 实现在gui上的模型推理对话
-          \item 负责整个项目的技术支持，辅助模型的整体评估
-          \item 辅助撰写实验报告
-        \end{itemize}
-
-  \item \textbf{曹瀚文}
-        \begin{itemize}
-          \item 辅助LLaVA1.5-7b模型的微调
-          \item 完成对模型微调超参数的比较
-          \item 在VisWiz数据集上对模型进行通用/基本能力评估
-          \item 整理实验日志，辅助撰写实验报告
-        \end{itemize}
-
-  \item \textbf{刘炎培}
-        \begin{itemize}
-          \item 负责撰写实验报告的整体内容
-          \item 辅助对模型进行通用能力评估
-        \end{itemize}
-
-  \item \textbf{金文韬}
-        \begin{itemize}
-          \item 答辩PPT制作
-        \end{itemize}
-  \item \textbf{刘梓涛}
-        \begin{itemize}
-          \item 答辩PPT制作
-        \end{itemize}
-
-  \item \textbf{文宇祥}
-        \begin{itemize}
-          \item 辅助整理实验报告和实验日志
-          \item 辅助对模型基础能力的评估，设计问题
-        \end{itemize}
-
-\end{enumerate}
-\textbf{注：}由于需要调用OpenAI的API，总计为50元，由大家平摊，因此每位小组成员均提供资金支持。
-
-\includepdf[pages=-]{daily.pdf}
+\section*{附录：实验日志与心得}
+\addcontentsline{toc}{section}{附录：实验日志与心得}
 
 \end{document}
