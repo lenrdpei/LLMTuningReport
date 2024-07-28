@@ -238,7 +238,14 @@
 
 \section{探索影响微调效果的实验因素}
 
-基于网络上搜集的行车记录仪图片*以及对于以下6个问题的问答，初步探索了训练周期与模型大小对微调效果的影响，结果见表格。
+基于网络上搜集的行车记录仪图片\ref{R.jpg}以及对于以下6个问题的问答，初步探索了训练周期与模型大小对微调效果的影响，结果见表格。
+
+\begin{figure}[ht] 
+    \centering 
+    \includegraphics[width=0.75\textwidth]{fig/\detokenize{R.jpg}}
+    \caption{提问用图} 
+    \label{R.jpg} % 图片标签，用于交叉引用
+\end{figure}
 
 \begin{enumerate} 
     \item Can you describe the general scene?（回答是否宽泛）
@@ -250,6 +257,15 @@
 \end{enumerate}
 
 \subsection{探究训练周期对微调效果的影响}
+
+以13b的预训练模型为例，对于部分问题的回答如图\ref{13b_0}所示：
+
+\begin{figure}[ht] 
+    \centering 
+    \includegraphics[width=0.75\textwidth]{fig/\detokenize{13b_0-.jpg}}
+    \caption{13b预训练模型的部分回答} 
+    \label{13b_0} % 图片标签，用于交叉引用
+\end{figure}
 
 \begin{table}[ht]
 \centering
@@ -266,6 +282,15 @@ $13b_10epoch$ & 强调道路 & 机器人 & 回答精确(No,...) & 回答精确(Y
 \end{table}
 
 \subsection{探究模型大小对微调效果的影响}
+
+以7b的10epoch模型为例，对于部分问题的回答如图\ref{7b_10}所示：
+
+\begin{figure}[ht] 
+    \centering 
+    \includegraphics[width=0.75\textwidth]{fig/\detokenize{7b_10.jpg}}
+    \caption{7b10epoch模型的部分回答} 
+    \label{7b_10} % 图片标签，用于交叉引用
+\end{figure}
 
 \begin{table}[ht]
 \centering
