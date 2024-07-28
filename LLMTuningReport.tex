@@ -241,13 +241,39 @@
 
 此外，我们还实现了一个简单的GUI界面，方便用户调用不同微调后的LLaVA模型进行连续对话。通过该界面，用户可以选择使用的模型版本、输入图片路径，并与模型进行连续对话，实现了模型的可视化调用。
 
-\section{使用Vizwiz数据集进行评估并探究影响微调效果的实验因素}
+\section{初步评估微调结果并探究影响微调效果的试验因素}
+\subsection{使用VizWiz数据集评估微调模型的通用性能}
 
-\subsection{数据集介绍}
+\subsubsection{数据集介绍}
 
-VizWiz是一个用于视觉问题回答（VQA）任务的大型数据集，旨在帮助盲人和视障人士获取有关他们周围环境的信息，被广泛应用于多模态大模型的评估。该数据集包含了来自视障用户的手机拍摄的图片，用户通过语音提问的方式获取图片中的信息。VizWiz数据集中的问题通常涉及图片中的物体、场景、颜色等内容，需要模型结合图片信息和问题描述给出准确的回答。
+VizWiz是一个用于视觉问题回答（VQA）任务的大型数据集\cite{gurari2018vizwizgrandchallengeanswering}，旨在帮助盲人和视障人士获取有关他们周围环境的信息，被广泛应用于多模态大模型通用性能的评估。该数据集包含了来自视障用户的手机拍摄的图片，用户通过语音提问的方式获取图片中的信息。VizWiz数据集中的问题通常涉及图片中的物体、场景、颜色等内容，需要模型结合图片信息和问题描述给出准确的回答。
 
-\subsection{评估结果}
+我们将微调后的不同模型应用于VizWiz数据集，通过评估模型在VQA任务上的表现，探究微调效果的影响因素。我们选取的模型包括两种参数规模：7b和13b，以及三种训练周期：0 epoch（baseline）、5 epochs和10 epochs。通过对比不同模型和微调方法的表现，我们可以更好地理解指令微调对模型通用性能的影响，为模型选择和微调提供参考。
+
+\subsubsection{评估结果}
+
+不同模型在VizWiz数据集上的测试得分如表\ref{tab:vizwiz}所示。关于表\ref{tab:vizwiz}，以下观察值得注意：
+\begin{itemize}
+  \item 不论是7b规模还是13b规模的模型，微调后的模型在VizWiz数据集上的表现均不如未微调的baseline模型。这可能是由于我们的微调指令为自动驾驶方面的数据集，虽然能够提高模型在自动驾驶领域的表现，但对于其他领域的通用性能可能带来负面效果。
+  \item 不论是7b规模还是13b规模的模型，10个epoch的训练周期相比于5个epoch的训练周期，微调效果都出现了一定程度的下降。这可能是由于训练周期过长导致模型过拟合，从而影响了模型在VQA任务上的表现。
+  \item 相比7b规模的模型，13b规模的模型在VizWiz数据集上的表现整体更好。这可能是由于13b规模的模型具有更多的参数和更强的表达能力，能够更好地理解和生成多模态信息，从而在VQA任务上表现更佳。
+\end{itemize}
+
+\begin{table}[hbt]
+  \centering
+  \caption{VizWiz数据集的测试得分}
+  \label{tab:vizwiz}
+  \begin{tabular}{@{}llllll@{}}
+  \toprule
+  Model            & Overall & Yes/No & Number & Unanswerable & Other \\ \midrule
+  \texttt{7b-0epoch}   & 50.38   & 78.34  & 46.02  & 75.39        & 38.69 \\
+  \texttt{7b-5epoch}   & 48.77   & 68.17  & 29.43  & 94.65        & 29.65 \\
+  \texttt{7b-10epoch}  & 48.32   & 65.42  & 28.62  & 93.99        & 29.43 \\
+  \texttt{13b-0epoch}  & 54.32   & 79.28  & 42.76  & 68.23        & 47.42 \\
+  \texttt{13b-5epoch}  & 47.99   & 75.33  & 41.14  & 56.09        & 43.14 \\
+  \texttt{13b-10epoch} & 47.78   & 75.3   & 41.71  & 57.83        & 42.13 \\ \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{影响微调效果的实验因素}
 
@@ -257,7 +283,7 @@ VizWiz是一个用于视觉问题回答（VQA）任务的大型数据集，旨�
 
 \subsection{结论}
 
-\section{使用CODA-LM数据集进行评估}
+\section{使用CODA-LM数据集评估微调模型在自动驾驶领域的性能}
 \subsection{数据集介绍}
 CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Large Vision-Language Models）评估基准。这个数据集采用分层数据结构，可以促使LVLMs分析复杂的驾驶场景，并生成高质量的预注释供人工注释者进一步验证和修订。CODA-LM旨在提供一个自动化和量化的评估方法，用于解决自动驾驶系统在处理真实世界的边缘情况时常见的挑战。
 
@@ -277,7 +303,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 \begin{table}[h]
   \centering
   % \small
-  \caption{Comparison between CODA-LM and existing datasets.}
+  \caption{CODA-LM和现有数据集的对比}
   \label{CODA-LM dataset}
   \begin{tabular}{@{}lccccc@{}}
     \toprule
@@ -320,28 +346,28 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
           \item Mini集：50 张图像，为验证集的一个子集，用于演示。
         \end{itemize}
   \item \textbf{数据组织：} 按照要求组织数据，确保图像和注释文件的对应关系正确。
-  \item \textbf{数据格式：}
-        注释文件包含三个任务的问答对，数据格式如下：
-        \begin{verbatim}
-    {
-        "general_perception": {
-            "vehicles": [...],
-            "vulnerable_road_users": [...],
-            "traffic signs": [...],
-            "traffic lights": [...],
-            "traffic cones": [...],
-            "barriers": [...],
-            "other objects": [...],
-            "description and explanation": <str>
-        },
-        "region_perception": {
-            "1": {...},
-            "2": {...},
-            "3": {...}
-        },
-        "driving_suggestion": <str>
-    }
-    \end{verbatim}
+  % \item \textbf{数据格式：}
+  %       注释文件包含三个任务的问答对，数据格式如下：
+  %       \begin{verbatim}
+  %   {
+  %       "general_perception": {
+  %           "vehicles": [...],
+  %           "vulnerable_road_users": [...],
+  %           "traffic signs": [...],
+  %           "traffic lights": [...],
+  %           "traffic cones": [...],
+  %           "barriers": [...],
+  %           "other objects": [...],
+  %           "description and explanation": <str>
+  %       },
+  %       "region_perception": {
+  %           "1": {...},
+  %           "2": {...},
+  %           "3": {...}
+  %       },
+  %       "driving_suggestion": <str>
+  %   }
+  %   \end{verbatim}
 \end{enumerate}
 
 \subsubsection{数据转换}
@@ -349,11 +375,11 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 在下载好数据后，我们将 CODA-LM 数据集转换为基本视觉问答（VQA）格式。以下是流程概要：
 
 \begin{enumerate}
-  \item \textbf{运行转换脚本}
-        使用 Python 脚本 \texttt{convert2vqa.py} 转换注释数据。根据需要处理的语言版本，可以选择运行英文或中文版本的命令，这里我们选择英文。
+  % \item \textbf{运行转换脚本：}
+        % 根据需要处理的语言版本，可以选择运行英文或中文版本的命令，这里我们选择英文。
 
   \item \textbf{基本VQA格式：}
-        VQA 格式的数据采用简单的字典形式保存，包含 \texttt{question\_id}、\texttt{image}、\texttt{question} 和 \texttt{answer}。这种格式便于处理和解析数据，用于视觉问答模型的训练和评估。
+        使用 Python 脚本将注释数据转换为VQA格式。VQA 格式的数据采用简单的字典形式保存，包含 \texttt{question\_id}、\texttt{image}、\texttt{question} 和 \texttt{answer}。这种格式便于处理和解析数据，用于视觉问答模型的训练和评估。
 
 
   \item \textbf{区域感知的具体实现：}如图\ref{fig:example}中所示，对于区域感知，文中提到了一个简单的实现方法：在图像上绘制红色矩形框，保存在 \texttt{images\_w\_bboxes} 目录中。这种方法可以帮助模型学习如何从特定区域中提取信息。
@@ -367,7 +393,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 \end{enumerate}
 
 \subsubsection{数据评估}
-由于最终评估需要用的openai的gpt4o的api,价格较为昂贵，为了控制成本，我们选择使用CODA-LM的Mini数据集（官方给出的测试集的子集）对LLaVA1.5-7B与LLaVA1.5-13B微调后的模型进行评估。以下是流程概要：
+由于最终的评估需要用到商用模型GPT-4o的API，为了控制API调用的成本，我们选择使用CODA-LM的Mini数据集（官方给出的测试集的子集）对LLaVA1.5-7B与LLaVA1.5-13B微调后的模型进行评估。以下是流程概要：
 
 \begin{enumerate}
   \item \textbf{推理与保存结果：}
@@ -380,36 +406,36 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
         \end{figure}
 
   \item \textbf{单独评估每个任务：}
-        使用特定的脚本和 OpenAI 的 gpt-4o-2024-05-13 模型进行评估，为每个任务生成评估结果：
-        \begin{itemize}
-          \item 一般感知：
-                \begin{verbatim}
-    python stage1_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/general_perception_answer.jsonl
-      --save_path eval/general_perception_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 驾驶建议：
-                \begin{verbatim}
-    python stage2_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/driving_suggestion_answer.jsonl
-      --save_path eval/driving_suggestion_answer --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-          \item 区域感知：
-                \begin{verbatim}
-    python stage3_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
-      --prediction_path $ROOT_TO_RESULTS/region_perception_answer_w_label.jsonl
-      --save_path eval/region_perception_answer_w_label --model_name gpt-4o-2024-05-13
-      --api_key $OPENAI_KEY
-    \end{verbatim}
-        \end{itemize}
+        使用特定的脚本和商用的的GPT-4o模型进行评估，为每个任务生成评估结果：即一般感知、驾驶建议和区域感知三个任务。
+    %     \begin{itemize}
+    %       \item 一般感知：
+    %             \begin{verbatim}
+    % python stage1_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
+    %   --prediction_path $ROOT_TO_RESULTS/general_perception_answer.jsonl
+    %   --save_path eval/general_perception_answer --model_name gpt-4o-2024-05-13
+    %   --api_key $OPENAI_KEY
+    % \end{verbatim}
+    %       \item 驾驶建议：
+    %             \begin{verbatim}
+    % python stage2_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
+    %   --prediction_path $ROOT_TO_RESULTS/driving_suggestion_answer.jsonl
+    %   --save_path eval/driving_suggestion_answer --model_name gpt-4o-2024-05-13
+    %   --api_key $OPENAI_KEY
+    % \end{verbatim}
+    %       \item 区域感知：
+    %             \begin{verbatim}
+    % python stage3_eval_batch.py --reference_path ./CODA-LM/$ROOT_TO_GT
+    %   --prediction_path $ROOT_TO_RESULTS/region_perception_answer_w_label.jsonl
+    %   --save_path eval/region_perception_answer_w_label --model_name gpt-4o-2024-05-13
+    %   --api_key $OPENAI_KEY
+    % \end{verbatim}
+        % \end{itemize}
 \end{enumerate}
 
 
 \subsection{评估结果}
 通过以上流程，我们得到了LLaVA1.5-7B与LLaVA1.5-13B微调后的模型在CODA-LM数据集上的评估结果。下表\ref{CODA-LM result}
-为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在mini集上实验得到的。
+为比较结果，其中原模型的数据是论文\cite{chen2024automatedevaluationlargevisionlanguage}中给出的，微调后的数据是我们在CODA-LM的Mini集上实验得到的。
 
 对于一般感知的文本得分，微调后的模型（加上 LoRA）在两种规模的版本中都显示出了性能提升。LLaVA1.5-7B 从 19.30 提高到 20.40，LLaVA1.5-13B 从 24.54 提高到 25.00。
 
@@ -418,7 +444,7 @@ CODA-LM 是一个用于自动驾驶边缘情况的大型视觉语言模型（Lar
 
 在驾驶建议方面，加上 LoRA 后的模型在两种规模的版本中都有较大的性能提升，7B 模型从 23.16 提高到 25.20，13B 模型从 27.90 提高到 29.40。
 
-总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
+总的来说，LoRA 作为一种低秩适应技术，显著提高了 LLaVA 模型在所有任务的性能，特别是在文本得分和障碍物识别方面。同时，更大规模的模型在没有 LoRA 的情况下就比较小规模的模型表现得更好，这表明更大的模型复杂性有助于提高性能。值得指出的是，虽然在大多数任务中，LoRA 都带来了性能提升，但在特定任务（如 VRU）中，性能有所下降，可能是由于模型在这些特定区域的过拟合或者LoRA适应性的局限。
 \begin{table}[htbp]
   \centering
   \caption{Comparison of LLaVA model before and after fine-tuning on CODA-LM dataset}
